@@ -1,0 +1,125 @@
+body{
+    background-color: rgb(226, 255, 169);
+    background-image: url('https://ecwt8zyzvrjyva9m.public.blob.vercel-storage.com/images/SCAMCASH-E8a8b5fHy983j21o4mEnm6nJQPB7px.jpg');
+    /* background-repeat: no-repeat; */
+    background-size: contain;
+    /* background-position: center; */
+
+}
+.kontener{
+    
+    width: 100%;
+    height: 100vh;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.kliker{
+    /* background-color: chartreuse; */
+    height: 20%;
+    padding: 120px;
+    /* border-radius: 300px; */
+
+}
+.tap{
+    background-color: rgb(248, 40, 40);
+    width: 200px;
+    font-size: 30px;
+    border-radius: 82px;
+    text-align: center;
+    color: rgb(13, 252, 1);
+    margin-top: 16px;
+    font-family: 'Courier New', Courier, monospace;
+    margin-right: 8px;
+
+}
+.wyczysc{
+    background-color: transparent;
+    border: 2px solid rgb(248, 40, 40);
+    width: 200px;
+    font-size: 30px;
+    border-radius: 8px;
+    text-align: center;
+    color: rgb(248, 40, 40);
+    margin-top: 16px;
+    font-family: 'Courier New', Courier, monospace;
+    transition: 0.3s;
+}
+.wyczysc:hover{
+    background-color:rgb(248, 40, 40) ;
+    color: black;
+    width: 300px;
+    font-size: 50px;
+    transition: 0.6s;
+
+}
+button{
+    cursor: pointer;
+}
+p{
+    font-size: 40px;
+    font-family: 'Courier New', Courier, monospace;
+}
+.przycisk{
+    border-radius: 30px;
+    background-color: chartreuse;
+    transition: 0.3s;
+}
+.przycisk:hover{
+    background-color: rgb(0, 139, 51);
+    transition: 0.6s;
+    padding: 30px;
+}
+.przycisk:active{
+    padding: 100px;
+    transition: 0.15s;
+}
+.shop {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 300px;
+  height: 100vh;
+  background-color: rgba(0,0,0,0.8);
+  color: white;
+  padding: 20px;
+  box-shadow: -2px 0 5px rgba(0,0,0,0.5);
+  transform: translateX(100%);
+  transition: transform 0.3s ease-in-out;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.shop.open {
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
+.shop h2 {
+  margin-top: 0;
+}
+
+.shop-item {
+  margin-bottom: 20px;
+  border-bottom: 1px solid #fff;
+  padding-bottom: 10px;
+}
+
+.shop-item button {
+  margin-top: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.shop-toggle {
+  position: fixed;
+  top: 20px;
+  right: 320px;
+  z-index: 1001;
+  background-color: #fff;
+  border: 2px solid #000;
+  padding: 10px 20px;
+  cursor: pointer;
+}

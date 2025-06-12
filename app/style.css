@@ -1,0 +1,82 @@
+html, body{
+    background-color: black;
+    text-align: center;
+    color: white;
+    overflow-y: hidden;
+}
+#podkreslenie{
+    box-shadow: 7px 7px 0px 0px #152E00;
+}
+
+.naglowki{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 90px;
+
+}
+
+.kontener_przyciski{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 50px;
+    margin-top: 120px;
+}
+
+
+
+
+.podpis{
+    font-size: 24px;
+    text-align: center;
+    color: #b7b7b7;
+    font-weight: bold;
+}
+h1{
+    font-size: 48px;
+}
+
+.kolko{
+    height: 441px;
+    width: 441px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 441px;
+    /* margin-left: -200px; */
+    
+}
+#kolko1{
+    position: fixed;
+    left: -20%;
+    bottom: 15%;
+    /* z-index: -1; */
+}
+#kolko2{
+    position: fixed;
+    right: -10%;
+    bottom: -20%;
+    /* z-index: -1; */
+
+}
+#kolko3{
+    position: fixed;
+    right: -10%;
+    top: -30%;
+    /* z-index: -1; */
+
+}
+
+.btn{
+    width: 393px;
+    height: 64px;
+    border-radius: 11px;
+    display: flex;
+    width: 393px;
+    padding: 17px 39px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    box-shadow: 7px 7px 0px 0px #152E00;
+}
