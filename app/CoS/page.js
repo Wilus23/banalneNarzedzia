@@ -17,6 +17,7 @@ const PLAYER_BASE_X = 50
 const ENEMY_BASE_X = ARENA_WIDTH - 50
 const DEFAULT_RANGE = 120
 const PUB_MAX_HP = 500
+const EFFECT_DURATION = 500 // ms
 
 const speedToDx = (s) => (s === 'slow' ? 20 : s === 'fast' ? 80 : 40)
 
@@ -79,6 +80,7 @@ export default function Home() {
   const [players, setPlayers]       = useState([])
   const [pubHp, setPubHp]           = useState(PUB_MAX_HP)
   const [tickTime, setTickTime]     = useState(Date.now())
+  const [effects, setEffects]       = useState([])
   const intervalRef                 = useRef(null)
 
   /* ---------- GAME LOOP TIMER ---------- */
@@ -99,6 +101,9 @@ export default function Home() {
   useEffect(() => {
     if (!tickTime) return
 
+    // remove old effects
+    setEffects(prev => prev.filter(e => Date.now() - e.created < EFFECT_DURATION))
+
     /* move units */
     setEnemies(prev => prev.map(e => ({ ...e, x: e.x - (speedToDx(e.speedName) * TICK) / 1000 })))
     setPlayers(prev => prev.map(p => ({ ...p, x: p.x + (speedToDx(p.speedName) * TICK) / 1000 })))
@@ -107,20 +112,31 @@ export default function Home() {
     setEnemies(prevEnemies => {
       let earned = 0
       let pubDmg = 0
+      const newEffects = []
 
       const afterCombat = prevEnemies.map(enemy => {
         let hp = enemy.hp
-        players.forEach(pl => { if (inRange(pl, enemy)) hp -= pl.dmg * (TICK / 1000) })
+        players.forEach(pl => {
+          if (inRange(pl, enemy)) hp -= pl.dmg * (TICK / 1000)
+        })
+        if (hp < enemy.hp) newEffects.push({ id: 'hit-' + Math.random(), x: enemy.x, lane: enemy.lane, type: 'hit', created: Date.now() })
         return { ...enemy, hp }
       })
 
       const survivors = []
       afterCombat.forEach(e => {
-        if (e.hp <= 0)              earned += e.bounty
-        else if (e.x <= 0)          pubDmg += e.dmg
-        else                        survivors.push(e)
+        if (e.hp <= 0) {
+          earned += e.bounty
+          newEffects.push({ id: 'exp-' + Math.random(), x: e.x, lane: e.lane, type: 'explosion', created: Date.now() })
+        } else if (e.x <= 0) {
+          pubDmg += e.dmg
+          newEffects.push({ id: 'hit-' + Math.random(), x: PLAYER_BASE_X, lane: 'ground', type: 'hit', created: Date.now() })
+        } else {
+          survivors.push(e)
+        }
       })
 
+      if (newEffects.length) setEffects(prev => [...prev, ...newEffects])
       if (earned)  setBtc(b => b + earned)
       if (pubDmg)  setPubHp(hp => Math.max(0, hp - pubDmg))
 
@@ -128,11 +144,29 @@ export default function Home() {
     })
 
     /* players take damage */
-    setPlayers(prevPlayers => prevPlayers.map(pl => {
-      let hp = pl.hp
-      enemies.forEach(enemy => { if (inRange(enemy, pl)) hp -= enemy.dmg * (TICK / 1000) })
-      return { ...pl, hp }
-    }).filter(p => p.hp > 0))
+    setPlayers(prevPlayers => {
+      const newEffects = []
+      const updated = prevPlayers.map(pl => {
+        let hp = pl.hp
+        enemies.forEach(enemy => {
+          if (inRange(enemy, pl)) hp -= enemy.dmg * (TICK / 1000)
+        })
+        if (hp < pl.hp) newEffects.push({ id: 'hit-' + Math.random(), x: pl.x, lane: pl.lane, type: 'hit', created: Date.now() })
+        return { ...pl, hp }
+      })
+
+      const survivors = []
+      updated.forEach(pl => {
+        if (pl.hp <= 0) {
+          newEffects.push({ id: 'exp-' + Math.random(), x: pl.x, lane: pl.lane, type: 'explosion', created: Date.now() })
+        } else {
+          survivors.push(pl)
+        }
+      })
+
+      if (newEffects.length) setEffects(prev => [...prev, ...newEffects])
+      return survivors
+    })
 
   }, [tickTime])
 
@@ -266,6 +300,26 @@ export default function Home() {
             }}
           >
             {u.label} ({Math.round(u.hp)})
+          </motion.div>
+        ))}
+
+        {/* EFFECTS */}
+        {effects.map(e => (
+          <motion.div
+            key={e.id}
+            initial={{ scale: 0.5, opacity: 1 }}
+            animate={{ scale: 2, opacity: 0 }}
+            transition={{ duration: EFFECT_DURATION / 1000 }}
+            style={{
+              position: 'absolute',
+              left: 0,
+              top: LANES[e.lane] || 0,
+              transform: `translateX(${e.x}px)`,
+              pointerEvents: 'none',
+              fontSize: 18
+            }}
+          >
+            {e.type === 'hit' ? '💢' : '💥'}
           </motion.div>
         ))}
 
